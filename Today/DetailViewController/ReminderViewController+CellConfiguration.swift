@@ -17,8 +17,8 @@ extension ReminderViewController {
         contentConfiguration.image = row.image
         return contentConfiguration
     }
-
-
+    
+    
     func headerConfiguration(for cell: UICollectionViewListCell, with title: String)
     -> UIListContentConfiguration
     {
@@ -26,33 +26,42 @@ extension ReminderViewController {
         contentConfiguration.text = title
         return contentConfiguration
     }
-
-
+    
+    
     func titleConfiguration(for cell: UICollectionViewListCell, with title: String?)
     -> TextFieldContentView.Configuration
     {
         var contentConfiguration = cell.textFieldConfiguration()
         contentConfiguration.text = title
+        contentConfiguration.onChange = { [weak self] title in
+            self?.workingReminder.title = title
+        }
         return contentConfiguration
     }
-
+    
     func dateConfiguration(for cell: UICollectionViewListCell, with date: Date)
-        -> DatePickerContentView.Configuration
-        {
-            var contentConfiguration = cell.datePickerConfiguration()
-            contentConfiguration.date = date
-            return contentConfiguration
+    -> DatePickerContentView.Configuration
+    {
+        var contentConfiguration = cell.datePickerConfiguration()
+        contentConfiguration.date = date
+        contentConfiguration.onChange = { [weak self] dueDate in
+            self?.workingReminder.dueDate = dueDate
         }
-
-
-        func notesConfiguration(for cell: UICollectionViewListCell, with notes: String?)
-        -> TextViewContentView.Configuration
-        {
-            var contentConfiguration = cell.textViewConfiguration()
-            contentConfiguration.text = notes
-            return contentConfiguration
+        return contentConfiguration
+    }
+    
+    
+    func notesConfiguration(for cell: UICollectionViewListCell, with notes: String?)
+    -> TextViewContentView.Configuration
+    {
+        var contentConfiguration = cell.textViewConfiguration()
+        contentConfiguration.text = notes
+        contentConfiguration.onChange = { [weak self] notes in
+            self?.workingReminder.notes = notes
         }
-
+        return contentConfiguration
+    }
+    
     func text(for row: Row) -> String? {
         switch row {
         case .date: return reminder.dueDate.dayText
